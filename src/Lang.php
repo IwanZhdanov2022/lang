@@ -8,7 +8,7 @@ class Lang
 {
     static private string $language = 'ru';
     private string $scriptPath = '';
-    private array $texts = [];
+    private array $messages = [];
 
     public function __construct()
     {
@@ -48,6 +48,14 @@ class Lang
         return $result;
     }
 
+    public function getDebugInfo(): array
+    {
+        return [
+            'scriptPath'    => $this->scriptPath,
+            'language'      => $this::$language,
+        ];
+    }
+
     private function getScriptPath(): void
     {
         foreach (debug_backtrace() as $trace) {
@@ -73,13 +81,13 @@ class Lang
 
     private function loadLanguageFiles(): void
     {
-        $this->texts = [];
+        $this->messages = [];
         $langFileList = $this->getLanguageFileList();
         foreach ($langFileList as $path) {
             if (is_file($path)) {
-                $this->texts = array_merge(
+                $this->messages = array_merge(
                     require $path,
-                    $this->texts
+                    $this->messages
                 );
             }
         }
@@ -87,13 +95,13 @@ class Lang
 
     private function getMessageByLabel(string $label, ?string $default=null): string|array
     {
-        if (!array_key_exists($label, $this->texts)) {
+        if (!array_key_exists($label, $this->messages)) {
             if ($default !== null) {
                 return $default;
             }
-            throw new NoMessageLangException("No message with label '$label'");
+            throw new NoMessageLangException("No message with label '$label'", $this);
         }
-        return $this->texts[$label];
+        return $this->messages[$label];
     }
 
     private function unwrapSlavicMessage(array $message, int $count): string
@@ -144,6 +152,6 @@ class Lang
             }
             return $str;
         }
-        throw new UnexpectedFormatLangException("Unexpected message format for label '$label'");
+        throw new UnexpectedFormatLangException("Unexpected message format for label '$label'", $this);
     }
 }
