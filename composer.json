@@ -1,0 +1,22 @@
+{
+    "name": "iwan07/lang",
+    "description": "Вывод текстовых сообщений на выбранном языке",
+    "authors": [
+        {
+            "name": "Иван Жданов",
+            "email": "iwanzhdanov2022@yandex.ru"
+        }
+    ],
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Iwan07\\Lang\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    }
+}
